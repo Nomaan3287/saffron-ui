@@ -1,0 +1,944 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Yatra — Journey Beyond Borders</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&family=Playfair+Display:ital,wght@1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --sand: #f5ede0;
+    --terracotta: #c4623a;
+    --deep: #1a1208;
+    --gold: #d4a853;
+    --ivory: #faf6ef;
+    --moss: #4a5e3a;
+    --sky: #2d6b8a;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--ivory);
+    color: var(--deep);
+    overflow-x: hidden;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed; top: 0; width: 100%; z-index: 100;
+    padding: 1.4rem 4rem;
+    display: flex; align-items: center; justify-content: space-between;
+    background: transparent;
+    transition: background 0.4s, backdrop-filter 0.4s;
+  }
+  nav.scrolled {
+    background: rgba(26,18,8,0.88);
+    backdrop-filter: blur(14px);
+  }
+  .logo {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2rem; font-weight: 600;
+    color: #fff; letter-spacing: 0.08em;
+  }
+  .logo span { color: var(--gold); }
+  .nav-links { display: flex; gap: 2.4rem; list-style: none; }
+  .nav-links a {
+    color: rgba(255,255,255,0.85);
+    text-decoration: none; font-size: 0.82rem;
+    letter-spacing: 0.12em; text-transform: uppercase;
+    transition: color 0.25s;
+  }
+  .nav-links a:hover { color: var(--gold); }
+  .nav-cta {
+    background: var(--terracotta);
+    color: #fff !important;
+    padding: 0.55rem 1.4rem;
+    border-radius: 2px;
+    transition: background 0.25s !important;
+  }
+  .nav-cta:hover { background: var(--gold) !important; color: var(--deep) !important; }
+
+  /* ── HERO ── */
+  .hero {
+    height: 100vh; position: relative;
+    display: flex; align-items: center; justify-content: center;
+    overflow: hidden;
+  }
+  .hero-bg {
+    position: absolute; inset: 0;
+    background:
+      linear-gradient(to bottom, rgba(26,18,8,0.45) 0%, rgba(26,18,8,0.2) 50%, rgba(26,18,8,0.7) 100%),
+      url('https://images.unsplash.com/photo-1524492412937-b28074a5d7da?w=1800&q=80') center/cover no-repeat;
+    transform: scale(1.06);
+    animation: heroZoom 14s ease-out forwards;
+  }
+  @keyframes heroZoom { to { transform: scale(1); } }
+
+  .hero-content {
+    position: relative; z-index: 2; text-align: center;
+    max-width: 860px; padding: 0 2rem;
+    animation: fadeUp 1.2s 0.3s both;
+  }
+  @keyframes fadeUp { from { opacity:0; transform:translateY(36px); } to { opacity:1; transform:none; } }
+
+  .hero-eyebrow {
+    font-size: 0.75rem; letter-spacing: 0.3em; text-transform: uppercase;
+    color: var(--gold); margin-bottom: 1.2rem;
+  }
+  .hero h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(3.2rem, 7vw, 6rem);
+    font-weight: 300; color: #fff;
+    line-height: 1.08; margin-bottom: 1.4rem;
+  }
+  .hero h1 em { font-style: italic; color: var(--gold); }
+  .hero p {
+    font-size: 1.05rem; color: rgba(255,255,255,0.8);
+    line-height: 1.7; max-width: 520px; margin: 0 auto 2.4rem;
+  }
+  .hero-btns { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+  .btn-primary {
+    background: var(--terracotta); color: #fff;
+    padding: 0.9rem 2.4rem; border: none; border-radius: 2px;
+    font-size: 0.85rem; letter-spacing: 0.1em; text-transform: uppercase;
+    cursor: pointer; text-decoration: none;
+    transition: background 0.25s, transform 0.2s;
+  }
+  .btn-primary:hover { background: var(--gold); color: var(--deep); transform: translateY(-2px); }
+  .btn-ghost {
+    background: transparent; color: #fff;
+    padding: 0.9rem 2.4rem;
+    border: 1px solid rgba(255,255,255,0.45); border-radius: 2px;
+    font-size: 0.85rem; letter-spacing: 0.1em; text-transform: uppercase;
+    cursor: pointer; text-decoration: none;
+    transition: border-color 0.25s, color 0.25s;
+  }
+  .btn-ghost:hover { border-color: var(--gold); color: var(--gold); }
+
+  .hero-scroll {
+    position: absolute; bottom: 2.5rem; left: 50%; transform: translateX(-50%);
+    display: flex; flex-direction: column; align-items: center; gap: 0.5rem;
+    color: rgba(255,255,255,0.6); font-size: 0.7rem; letter-spacing: 0.2em;
+    text-transform: uppercase; z-index: 2;
+  }
+  .scroll-line {
+    width: 1px; height: 48px; background: rgba(255,255,255,0.3);
+    animation: scrollPulse 2s infinite;
+  }
+  @keyframes scrollPulse {
+    0%,100% { transform: scaleY(1); opacity: 0.4; }
+    50% { transform: scaleY(0.4); opacity: 1; }
+  }
+
+  /* ── STATS STRIP ── */
+  .stats-strip {
+    background: var(--deep);
+    display: flex; justify-content: center;
+    gap: 0; flex-wrap: wrap;
+  }
+  .stat {
+    padding: 2.2rem 4rem;
+    border-right: 1px solid rgba(255,255,255,0.08);
+    text-align: center;
+  }
+  .stat:last-child { border-right: none; }
+  .stat-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2.8rem; color: var(--gold); font-weight: 300;
+  }
+  .stat-label {
+    font-size: 0.72rem; letter-spacing: 0.18em; text-transform: uppercase;
+    color: rgba(255,255,255,0.5); margin-top: 0.3rem;
+  }
+
+  /* ── SECTION COMMON ── */
+  section { padding: 6rem 4rem; }
+  .section-eyebrow {
+    font-size: 0.72rem; letter-spacing: 0.3em; text-transform: uppercase;
+    color: var(--terracotta); margin-bottom: 0.9rem;
+  }
+  .section-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(2.2rem, 4vw, 3.4rem);
+    font-weight: 300; line-height: 1.15;
+    margin-bottom: 1.2rem;
+  }
+  .section-sub {
+    font-size: 0.95rem; color: #6b5e4e; line-height: 1.75;
+    max-width: 540px;
+  }
+  .section-header { margin-bottom: 3.5rem; }
+
+  /* ── INDIA DESTINATIONS ── */
+  #india { background: var(--ivory); }
+  .india-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 3rem; flex-wrap: wrap; gap: 1.5rem; }
+
+  .destinations-grid {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr 1fr;
+    grid-template-rows: 300px 300px;
+    gap: 1rem;
+  }
+  .dest-card {
+    position: relative; overflow: hidden; cursor: pointer;
+    border-radius: 3px;
+  }
+  .dest-card:first-child { grid-row: span 2; }
+  .dest-img {
+    width: 100%; height: 100%; object-fit: cover;
+    transition: transform 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
+  .dest-card:hover .dest-img { transform: scale(1.08); }
+  .dest-overlay {
+    position: absolute; inset: 0;
+    background: linear-gradient(to top, rgba(26,18,8,0.82) 0%, transparent 55%);
+    display: flex; flex-direction: column; justify-content: flex-end;
+    padding: 1.8rem;
+    transition: background 0.4s;
+  }
+  .dest-card:hover .dest-overlay {
+    background: linear-gradient(to top, rgba(26,18,8,0.92) 0%, rgba(26,18,8,0.1) 55%);
+  }
+  .dest-tag {
+    font-size: 0.65rem; letter-spacing: 0.22em; text-transform: uppercase;
+    color: var(--gold); margin-bottom: 0.4rem;
+  }
+  .dest-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.7rem; color: #fff; font-weight: 400; line-height: 1.1;
+  }
+  .dest-card:first-child .dest-name { font-size: 2.6rem; }
+  .dest-desc {
+    font-size: 0.82rem; color: rgba(255,255,255,0.75);
+    line-height: 1.6; margin-top: 0.5rem; max-height: 0;
+    overflow: hidden; transition: max-height 0.5s, margin-top 0.3s;
+  }
+  .dest-card:hover .dest-desc { max-height: 80px; }
+  .dest-arrow {
+    margin-top: 1rem; width: 36px; height: 36px; border-radius: 50%;
+    border: 1px solid rgba(255,255,255,0.4);
+    display: flex; align-items: center; justify-content: center;
+    color: #fff; font-size: 0.9rem;
+    opacity: 0; transform: translateY(8px);
+    transition: opacity 0.3s, transform 0.3s;
+  }
+  .dest-card:hover .dest-arrow { opacity: 1; transform: none; }
+
+  /* ── WORLD SECTION ── */
+  #world { background: var(--deep); color: #fff; }
+  #world .section-title { color: #fff; }
+  #world .section-sub { color: rgba(255,255,255,0.55); }
+  #world .section-eyebrow { color: var(--gold); }
+
+  .world-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+  }
+  .world-card {
+    position: relative; overflow: hidden; border-radius: 3px;
+    height: 380px; cursor: pointer;
+  }
+  .world-img {
+    width: 100%; height: 100%; object-fit: cover;
+    transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    filter: brightness(0.85);
+  }
+  .world-card:hover .world-img { transform: scale(1.1); filter: brightness(1); }
+  .world-overlay {
+    position: absolute; inset: 0;
+    background: linear-gradient(to top, rgba(10,5,0,0.88) 0%, transparent 60%);
+    padding: 1.6rem; display: flex; flex-direction: column; justify-content: flex-end;
+  }
+  .world-country {
+    font-size: 0.65rem; letter-spacing: 0.25em; text-transform: uppercase;
+    color: var(--gold); margin-bottom: 0.3rem;
+  }
+  .world-place {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.55rem; color: #fff; font-weight: 400;
+  }
+  .world-tagline {
+    font-size: 0.78rem; color: rgba(255,255,255,0.6);
+    margin-top: 0.3rem; line-height: 1.5;
+    max-height: 0; overflow: hidden; transition: max-height 0.4s;
+  }
+  .world-card:hover .world-tagline { max-height: 60px; }
+  .world-price {
+    margin-top: 0.8rem; font-size: 0.8rem; color: var(--gold);
+    letter-spacing: 0.05em;
+  }
+
+  /* ── EXPERIENCE SECTION ── */
+  #experience { background: var(--sand); }
+  .exp-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem;
+    margin-top: 3rem;
+  }
+  .exp-card {
+    background: var(--ivory); padding: 2.5rem 2rem;
+    border-radius: 3px; border-top: 3px solid var(--terracotta);
+    transition: transform 0.3s, box-shadow 0.3s;
+  }
+  .exp-card:hover { transform: translateY(-6px); box-shadow: 0 20px 40px rgba(0,0,0,0.1); }
+  .exp-icon { font-size: 2rem; margin-bottom: 1.2rem; }
+  .exp-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.5rem; margin-bottom: 0.8rem;
+  }
+  .exp-text { font-size: 0.88rem; color: #6b5e4e; line-height: 1.75; }
+
+  /* ── PACKAGES ── */
+  #packages { background: var(--ivory); }
+  .pkg-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
+  .pkg-card {
+    border: 1px solid rgba(0,0,0,0.08); border-radius: 4px;
+    overflow: hidden; transition: box-shadow 0.3s, transform 0.3s;
+  }
+  .pkg-card:hover { box-shadow: 0 24px 50px rgba(0,0,0,0.12); transform: translateY(-4px); }
+  .pkg-card.featured { border-color: var(--gold); position: relative; }
+  .pkg-badge {
+    position: absolute; top: 1.2rem; right: 1.2rem;
+    background: var(--gold); color: var(--deep);
+    font-size: 0.65rem; letter-spacing: 0.15em; text-transform: uppercase;
+    padding: 0.3rem 0.8rem; border-radius: 2px;
+  }
+  .pkg-img { width: 100%; height: 200px; object-fit: cover; }
+  .pkg-body { padding: 1.8rem; }
+  .pkg-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.4rem; margin-bottom: 0.5rem;
+  }
+  .pkg-meta {
+    display: flex; gap: 1.2rem; margin-bottom: 1rem;
+    font-size: 0.78rem; color: #8a7a6a;
+  }
+  .pkg-meta span { display: flex; align-items: center; gap: 0.3rem; }
+  .pkg-features { list-style: none; margin-bottom: 1.5rem; }
+  .pkg-features li {
+    font-size: 0.83rem; padding: 0.5rem 0;
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+    color: #5a4d3d; display: flex; align-items: center; gap: 0.5rem;
+  }
+  .pkg-features li::before { content: '✓'; color: var(--moss); font-weight: 700; }
+  .pkg-footer { display: flex; align-items: center; justify-content: space-between; }
+  .pkg-price { font-family: 'Cormorant Garamond', serif; }
+  .pkg-price .from { font-size: 0.72rem; color: #8a7a6a; text-transform: uppercase; letter-spacing: 0.1em; display: block; }
+  .pkg-price .amount { font-size: 1.9rem; color: var(--terracotta); font-weight: 600; }
+  .btn-book {
+    background: var(--deep); color: #fff;
+    padding: 0.7rem 1.6rem; border: none; border-radius: 2px;
+    font-size: 0.78rem; letter-spacing: 0.1em; text-transform: uppercase;
+    cursor: pointer; transition: background 0.25s;
+  }
+  .btn-book:hover { background: var(--terracotta); }
+  .pkg-card.featured .btn-book { background: var(--gold); color: var(--deep); }
+  .pkg-card.featured .btn-book:hover { background: var(--terracotta); color: #fff; }
+
+  /* ── TESTIMONIALS ── */
+  #testimonials { background: var(--deep); color: #fff; padding: 6rem 4rem; }
+  #testimonials .section-title { color: #fff; }
+  #testimonials .section-eyebrow { color: var(--gold); }
+  .testi-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-top: 3rem; }
+  .testi-card {
+    background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08);
+    padding: 2rem; border-radius: 3px;
+  }
+  .testi-stars { color: var(--gold); font-size: 0.9rem; margin-bottom: 1rem; letter-spacing: 0.1em; }
+  .testi-quote {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.15rem; font-style: italic; color: rgba(255,255,255,0.85);
+    line-height: 1.65; margin-bottom: 1.5rem;
+  }
+  .testi-author { display: flex; align-items: center; gap: 0.9rem; }
+  .testi-avatar {
+    width: 44px; height: 44px; border-radius: 50%; object-fit: cover;
+    border: 2px solid var(--gold);
+  }
+  .testi-name { font-size: 0.85rem; color: #fff; font-weight: 500; }
+  .testi-location { font-size: 0.72rem; color: rgba(255,255,255,0.45); }
+
+  /* ── NEWSLETTER ── */
+  #newsletter {
+    background: var(--terracotta); color: #fff;
+    text-align: center; padding: 5rem 4rem;
+  }
+  #newsletter .section-title { color: #fff; }
+  #newsletter p { color: rgba(255,255,255,0.8); margin-bottom: 2.5rem; font-size: 1rem; line-height: 1.7; }
+  .newsletter-form { display: flex; gap: 0; max-width: 480px; margin: 0 auto; }
+  .newsletter-form input {
+    flex: 1; padding: 1rem 1.4rem;
+    border: none; border-radius: 3px 0 0 3px;
+    font-size: 0.9rem; outline: none;
+    font-family: 'DM Sans', sans-serif;
+  }
+  .newsletter-form button {
+    background: var(--deep); color: #fff;
+    padding: 1rem 1.8rem; border: none; border-radius: 0 3px 3px 0;
+    font-size: 0.82rem; letter-spacing: 0.1em; text-transform: uppercase;
+    cursor: pointer; transition: background 0.25s;
+    font-family: 'DM Sans', sans-serif;
+  }
+  .newsletter-form button:hover { background: var(--gold); }
+
+  /* ── FOOTER ── */
+  footer {
+    background: #110d06; color: rgba(255,255,255,0.55);
+    padding: 4rem 4rem 2rem;
+  }
+  .footer-grid {
+    display: grid; grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 3rem; margin-bottom: 3rem;
+  }
+  .footer-logo {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.8rem; color: #fff; margin-bottom: 1rem;
+  }
+  .footer-logo span { color: var(--gold); }
+  .footer-desc { font-size: 0.85rem; line-height: 1.75; }
+  .footer-heading {
+    font-size: 0.72rem; letter-spacing: 0.22em; text-transform: uppercase;
+    color: var(--gold); margin-bottom: 1.2rem;
+  }
+  .footer-links { list-style: none; }
+  .footer-links li { margin-bottom: 0.7rem; }
+  .footer-links a {
+    color: rgba(255,255,255,0.5); text-decoration: none;
+    font-size: 0.85rem; transition: color 0.2s;
+  }
+  .footer-links a:hover { color: #fff; }
+  .footer-bottom {
+    border-top: 1px solid rgba(255,255,255,0.06);
+    padding-top: 1.8rem; display: flex;
+    justify-content: space-between; align-items: center;
+    font-size: 0.78rem; flex-wrap: wrap; gap: 1rem;
+  }
+  .footer-socials { display: flex; gap: 1rem; }
+  .footer-socials a {
+    width: 36px; height: 36px; border-radius: 50%;
+    border: 1px solid rgba(255,255,255,0.12);
+    display: flex; align-items: center; justify-content: center;
+    color: rgba(255,255,255,0.5); text-decoration: none; font-size: 0.85rem;
+    transition: border-color 0.2s, color 0.2s;
+  }
+  .footer-socials a:hover { border-color: var(--gold); color: var(--gold); }
+
+  /* ── SCROLL ANIMATIONS ── */
+  .reveal { opacity: 0; transform: translateY(30px); transition: opacity 0.7s, transform 0.7s; }
+  .reveal.visible { opacity: 1; transform: none; }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 1024px) {
+    .destinations-grid { grid-template-columns: 1fr 1fr; grid-template-rows: auto; }
+    .dest-card:first-child { grid-row: span 1; }
+    .world-grid { grid-template-columns: repeat(2, 1fr); }
+    .pkg-grid { grid-template-columns: 1fr 1fr; }
+    .footer-grid { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 768px) {
+    nav { padding: 1.2rem 1.5rem; }
+    .nav-links { display: none; }
+    section { padding: 4rem 1.5rem; }
+    .destinations-grid { grid-template-columns: 1fr; }
+    .world-grid { grid-template-columns: 1fr; }
+    .exp-grid { grid-template-columns: 1fr; }
+    .pkg-grid { grid-template-columns: 1fr; }
+    .testi-grid { grid-template-columns: 1fr; }
+    .footer-grid { grid-template-columns: 1fr; }
+    .stats-strip { flex-direction: column; }
+    .stat { border-right: none; border-bottom: 1px solid rgba(255,255,255,0.08); }
+    .india-header { flex-direction: column; align-items: flex-start; }
+    .newsletter-form { flex-direction: column; }
+    .newsletter-form input { border-radius: 3px; }
+    .newsletter-form button { border-radius: 3px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="nav">
+  <div class="logo">Y<span>A</span>TRA</div>
+  <ul class="nav-links">
+    <li><a href="#india">India</a></li>
+    <li><a href="#world">World</a></li>
+    <li><a href="#experience">Experiences</a></li>
+    <li><a href="#packages">Packages</a></li>
+    <li><a href="#testimonials">Stories</a></li>
+    <li><a href="#newsletter" class="nav-cta">Book Now</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-content">
+    <p class="hero-eyebrow">✦ India's Premier Travel Curator ✦</p>
+    <h1>Journey Into the<br><em>Soul of the World</em></h1>
+    <p>From the Himalayan peaks to the temples of Rome, we craft journeys that transcend destinations — they transform lives.</p>
+    <div class="hero-btns">
+      <a href="#india" class="btn-primary">Explore India</a>
+      <a href="#world" class="btn-ghost">See the World</a>
+    </div>
+  </div>
+  <div class="hero-scroll">
+    <div class="scroll-line"></div>
+    <span>Scroll</span>
+  </div>
+</section>
+
+<!-- STATS -->
+<div class="stats-strip">
+  <div class="stat">
+    <div class="stat-num">12K+</div>
+    <div class="stat-label">Happy Travellers</div>
+  </div>
+  <div class="stat">
+    <div class="stat-num">180+</div>
+    <div class="stat-label">Destinations</div>
+  </div>
+  <div class="stat">
+    <div class="stat-num">24</div>
+    <div class="stat-label">Years of Excellence</div>
+  </div>
+  <div class="stat">
+    <div class="stat-num">98%</div>
+    <div class="stat-label">Satisfaction Rate</div>
+  </div>
+</div>
+
+<!-- INDIA DESTINATIONS -->
+<section id="india">
+  <div class="india-header reveal">
+    <div>
+      <p class="section-eyebrow">Incredible India</p>
+      <h2 class="section-title">Land of a Thousand<br>Wonders</h2>
+    </div>
+    <div class="section-sub">
+      Ancient temples, royal palaces, misty backwaters and snow-capped summits — India is not one destination, it is many worlds in one.
+    </div>
+  </div>
+
+  <div class="destinations-grid reveal">
+
+    <!-- Taj Mahal - big card -->
+    <div class="dest-card">
+      <img class="dest-img" src="https://images.unsplash.com/photo-1564507592333-c60657eea523?w=900&q=80" alt="Taj Mahal, Agra" loading="lazy">
+      <div class="dest-overlay">
+        <div class="dest-tag">Uttar Pradesh</div>
+        <div class="dest-name">Taj Mahal,<br>Agra</div>
+        <div class="dest-desc">A white marble symphony of love built by Emperor Shah Jahan — one of the seven wonders of the world and UNESCO heritage site.</div>
+        <div class="dest-arrow">→</div>
+      </div>
+    </div>
+
+    <!-- Jaipur -->
+    <div class="dest-card">
+      <img class="dest-img" src="https://images.unsplash.com/photo-1477587458883-47145ed6a316?w=600&q=80" alt="Jaipur" loading="lazy">
+      <div class="dest-overlay">
+        <div class="dest-tag">Rajasthan</div>
+        <div class="dest-name">Jaipur — Pink City</div>
+        <div class="dest-desc">Forts, palaces and bazaars bathed in rose hues.</div>
+        <div class="dest-arrow">→</div>
+      </div>
+    </div>
+
+    <!-- Kerala -->
+    <div class="dest-card">
+      <img class="dest-img" src="https://images.unsplash.com/photo-1602216056096-3b40cc0c9944?w=600&q=80" alt="Kerala Backwaters" loading="lazy">
+      <div class="dest-overlay">
+        <div class="dest-tag">Kerala</div>
+        <div class="dest-name">Alleppey Backwaters</div>
+        <div class="dest-desc">Glide on houseboats through emerald lagoons.</div>
+        <div class="dest-arrow">→</div>
+      </div>
+    </div>
+
+    <!-- Varanasi -->
+    <div class="dest-card">
+      <img class="dest-img" src="https://images.unsplash.com/photo-1561361058-c24e01c2ca1d?w=600&q=80" alt="Varanasi Ghats" loading="lazy">
+      <div class="dest-overlay">
+        <div class="dest-tag">Uttar Pradesh</div>
+        <div class="dest-name">Varanasi Ghats</div>
+        <div class="dest-desc">The spiritual heart of India along the sacred Ganges.</div>
+        <div class="dest-arrow">→</div>
+      </div>
+    </div>
+
+    <!-- Ladakh -->
+    <div class="dest-card">
+      <img class="dest-img" src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=600&q=80" alt="Ladakh" loading="lazy">
+      <div class="dest-overlay">
+        <div class="dest-tag">Jammu & Kashmir</div>
+        <div class="dest-name">Ladakh Highlands</div>
+        <div class="dest-desc">Monasteries perched above the roof of the world.</div>
+        <div class="dest-arrow">→</div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- WORLD DESTINATIONS -->
+<section id="world">
+  <div class="section-header reveal">
+    <p class="section-eyebrow">Beyond Borders</p>
+    <h2 class="section-title">The World Awaits</h2>
+    <p class="section-sub">Handpicked international destinations with expert-guided itineraries and seamless end-to-end travel.</p>
+  </div>
+
+  <div class="world-grid reveal">
+
+    <div class="world-card">
+      <img class="world-img" src="https://images.unsplash.com/photo-1499856871958-5b9627545d1a?w=500&q=80" alt="Paris" loading="lazy">
+      <div class="world-overlay">
+        <div class="world-country">France</div>
+        <div class="world-place">Paris — City of Light</div>
+        <div class="world-tagline">The Eiffel Tower, Louvre and romance on every boulevard.</div>
+        <div class="world-price">From ₹85,000</div>
+      </div>
+    </div>
+
+    <div class="world-card">
+      <img class="world-img" src="https://images.unsplash.com/photo-1570077188670-e3a8d69ac5ff?w=500&q=80" alt="Santorini Greece" loading="lazy">
+      <div class="world-overlay">
+        <div class="world-country">Greece</div>
+        <div class="world-place">Santorini</div>
+        <div class="world-tagline">Whitewashed villages cascading into the Aegean blue.</div>
+        <div class="world-price">From ₹1,10,000</div>
+      </div>
+    </div>
+
+    <div class="world-card">
+      <img class="world-img" src="https://images.unsplash.com/photo-1512453979798-5ea266f8880c?w=500&q=80" alt="Dubai" loading="lazy">
+      <div class="world-overlay">
+        <div class="world-country">UAE</div>
+        <div class="world-place">Dubai</div>
+        <div class="world-tagline">Skyscrapers, deserts and the world's grandest luxury.</div>
+        <div class="world-price">From ₹65,000</div>
+      </div>
+    </div>
+
+    <div class="world-card">
+      <img class="world-img" src="https://images.unsplash.com/photo-1490806843957-31f4c9a91c65?w=500&q=80" alt="Bali Indonesia" loading="lazy">
+      <div class="world-overlay">
+        <div class="world-country">Indonesia</div>
+        <div class="world-place">Bali</div>
+        <div class="world-tagline">Rice terraces, sacred temples and sunsets over Tanah Lot.</div>
+        <div class="world-price">From ₹72,000</div>
+      </div>
+    </div>
+
+    <div class="world-card">
+      <img class="world-img" src="https://images.unsplash.com/photo-1549693578-d683be217e58?w=500&q=80" alt="Machu Picchu" loading="lazy">
+      <div class="world-overlay">
+        <div class="world-country">Peru</div>
+        <div class="world-place">Machu Picchu</div>
+        <div class="world-tagline">Lost city of the Incas shrouded in Andean mist.</div>
+        <div class="world-price">From ₹1,40,000</div>
+      </div>
+    </div>
+
+    <div class="world-card">
+      <img class="world-img" src="https://images.unsplash.com/photo-1516483638261-f4dbaf036963?w=500&q=80" alt="Amalfi Coast Italy" loading="lazy">
+      <div class="world-overlay">
+        <div class="world-country">Italy</div>
+        <div class="world-place">Amalfi Coast</div>
+        <div class="world-tagline">Cliffside villages, limoncello and la dolce vita.</div>
+        <div class="world-price">From ₹1,20,000</div>
+      </div>
+    </div>
+
+    <div class="world-card">
+      <img class="world-img" src="https://images.unsplash.com/photo-1548013146-72479768bada?w=500&q=80" alt="Tokyo Japan" loading="lazy">
+      <div class="world-overlay">
+        <div class="world-country">Japan</div>
+        <div class="world-place">Tokyo</div>
+        <div class="world-tagline">Where ancient temples meet neon-lit futurism.</div>
+        <div class="world-price">From ₹1,35,000</div>
+      </div>
+    </div>
+
+    <div class="world-card">
+      <img class="world-img" src="https://images.unsplash.com/photo-1523482580672-f109ba8cb9be?w=500&q=80" alt="Sydney Australia" loading="lazy">
+      <div class="world-overlay">
+        <div class="world-country">Australia</div>
+        <div class="world-place">Sydney</div>
+        <div class="world-tagline">Opera House, Harbour Bridge and the finest beaches.</div>
+        <div class="world-price">From ₹1,60,000</div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- EXPERIENCES -->
+<section id="experience">
+  <div class="section-header reveal">
+    <p class="section-eyebrow">Why Travel With Us</p>
+    <h2 class="section-title">More Than a Holiday —<br>A Transformation</h2>
+  </div>
+
+  <div class="exp-grid reveal">
+    <div class="exp-card">
+      <div class="exp-icon">🏔️</div>
+      <div class="exp-title">Adventure Expeditions</div>
+      <p class="exp-text">Himalayan treks, white-water rafting in Rishikesh, dune bashing in Rajasthan — crafted for the bold and the restless.</p>
+    </div>
+    <div class="exp-card">
+      <div class="exp-icon">🛕</div>
+      <div class="exp-title">Cultural Immersions</div>
+      <p class="exp-text">Live with local families, witness age-old rituals, attend classical dance performances and cook regional cuisines.</p>
+    </div>
+    <div class="exp-card">
+      <div class="exp-icon">🛥️</div>
+      <div class="exp-title">Luxury Escapes</div>
+      <p class="exp-text">Palace hotels, private houseboat cruises, helicopter transfers and candlelit dinners under the stars.</p>
+    </div>
+    <div class="exp-card">
+      <div class="exp-icon">🐘</div>
+      <div class="exp-title">Wildlife Safaris</div>
+      <p class="exp-text">Spot Bengal tigers in Ranthambore, track elephants in Kabini, or witness the Great Migration in Kenya.</p>
+    </div>
+    <div class="exp-card">
+      <div class="exp-icon">🍛</div>
+      <div class="exp-title">Culinary Journeys</div>
+      <p class="exp-text">Spice market tours, cooking masterclasses with local chefs, street food trails and fine-dining experiences.</p>
+    </div>
+    <div class="exp-card">
+      <div class="exp-icon">🧘</div>
+      <div class="exp-title">Wellness Retreats</div>
+      <p class="exp-text">Yoga ashrams in Rishikesh, Ayurvedic healing in Kerala, and meditation sanctuaries in the Himalayan foothills.</p>
+    </div>
+  </div>
+</section>
+
+<!-- PACKAGES -->
+<section id="packages">
+  <div class="section-header reveal">
+    <p class="section-eyebrow">Curated Packages</p>
+    <h2 class="section-title">Ready to Fly Itineraries</h2>
+    <p class="section-sub">Fully inclusive packages crafted by our expert travel architects — just pack your bags.</p>
+  </div>
+
+  <div class="pkg-grid reveal">
+
+    <div class="pkg-card">
+      <img class="pkg-img" src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=600&q=80" alt="Ladakh Package" loading="lazy">
+      <div class="pkg-body">
+        <div class="pkg-name">Ladakh & Leh Adventure</div>
+        <div class="pkg-meta">
+          <span>📅 8 Nights</span>
+          <span>👥 2–12 Guests</span>
+          <span>⭐ 4.9</span>
+        </div>
+        <ul class="pkg-features">
+          <li>Pangong Lake overnight stay</li>
+          <li>Nubra Valley camel safari</li>
+          <li>Monastery visits & guided walks</li>
+          <li>All transfers & accommodation</li>
+        </ul>
+        <div class="pkg-footer">
+          <div class="pkg-price">
+            <span class="from">From</span>
+            <span class="amount">₹38,000</span>
+          </div>
+          <button class="btn-book">Book Now</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="pkg-card featured">
+      <div class="pkg-badge">Most Popular</div>
+      <img class="pkg-img" src="https://images.unsplash.com/photo-1516483638261-f4dbaf036963?w=600&q=80" alt="Italy Package" loading="lazy">
+      <div class="pkg-body">
+        <div class="pkg-name">Italy Grand Tour</div>
+        <div class="pkg-meta">
+          <span>📅 10 Nights</span>
+          <span>👥 2–8 Guests</span>
+          <span>⭐ 5.0</span>
+        </div>
+        <ul class="pkg-features">
+          <li>Rome, Florence & Venice</li>
+          <li>Private villa in Tuscany</li>
+          <li>Wine tasting & pasta class</li>
+          <li>Business class flights included</li>
+        </ul>
+        <div class="pkg-footer">
+          <div class="pkg-price">
+            <span class="from">From</span>
+            <span class="amount">₹1,80,000</span>
+          </div>
+          <button class="btn-book">Book Now</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="pkg-card">
+      <img class="pkg-img" src="https://images.unsplash.com/photo-1602216056096-3b40cc0c9944?w=600&q=80" alt="Kerala Package" loading="lazy">
+      <div class="pkg-body">
+        <div class="pkg-name">Kerala Bliss Retreat</div>
+        <div class="pkg-meta">
+          <span>📅 6 Nights</span>
+          <span>👥 2–6 Guests</span>
+          <span>⭐ 4.8</span>
+        </div>
+        <ul class="pkg-features">
+          <li>Luxury houseboat — Alleppey</li>
+          <li>Ayurvedic spa sessions</li>
+          <li>Periyar wildlife sanctuary</li>
+          <li>Spice plantation tour</li>
+        </ul>
+        <div class="pkg-footer">
+          <div class="pkg-price">
+            <span class="from">From</span>
+            <span class="amount">₹28,000</span>
+          </div>
+          <button class="btn-book">Book Now</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section id="testimonials">
+  <div class="section-header reveal">
+    <p class="section-eyebrow">Traveller Stories</p>
+    <h2 class="section-title">Journeys That Stayed With Them</h2>
+  </div>
+
+  <div class="testi-grid reveal">
+    <div class="testi-card">
+      <div class="testi-stars">★★★★★</div>
+      <div class="testi-quote">"Our Rajasthan circuit was flawlessly planned. Every fort, every spice market, every sunset — Yatra made it feel effortless and magical."</div>
+      <div class="testi-author">
+        <img class="testi-avatar" src="https://randomuser.me/api/portraits/women/44.jpg" alt="Priya">
+        <div>
+          <div class="testi-name">Priya Mehta</div>
+          <div class="testi-location">Mumbai, India</div>
+        </div>
+      </div>
+    </div>
+    <div class="testi-card">
+      <div class="testi-stars">★★★★★</div>
+      <div class="testi-quote">"Italy was beyond our dreams. Private tours, local restaurants off the tourist trail — this wasn't a vacation, it was a life event."</div>
+      <div class="testi-author">
+        <img class="testi-avatar" src="https://randomuser.me/api/portraits/men/32.jpg" alt="Rohan">
+        <div>
+          <div class="testi-name">Rohan & Anika Sharma</div>
+          <div class="testi-location">Delhi, India</div>
+        </div>
+      </div>
+    </div>
+    <div class="testi-card">
+      <div class="testi-stars">★★★★★</div>
+      <div class="testi-quote">"Ladakh with Yatra was transformative. The guides knew every monk, every monastery. I left a different person."</div>
+      <div class="testi-author">
+        <img class="testi-avatar" src="https://randomuser.me/api/portraits/men/67.jpg" alt="Vikram">
+        <div>
+          <div class="testi-name">Vikram Nair</div>
+          <div class="testi-location">Bangalore, India</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- NEWSLETTER -->
+<section id="newsletter">
+  <p class="section-eyebrow" style="color:rgba(255,255,255,0.6); text-align:center;">Stay Inspired</p>
+  <h2 class="section-title" style="text-align:center; margin-bottom:1rem;">Never Miss a Journey</h2>
+  <p>Join 50,000+ travellers who receive exclusive deals, hidden gems and travel inspiration every month.</p>
+  <div class="newsletter-form">
+    <input type="email" placeholder="Your email address">
+    <button>Subscribe</button>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-grid">
+    <div>
+      <div class="footer-logo">Y<span>A</span>TRA</div>
+      <p class="footer-desc">India's most trusted travel curator since 2001. We don't just plan trips — we craft stories you'll tell for decades.</p>
+    </div>
+    <div>
+      <div class="footer-heading">India</div>
+      <ul class="footer-links">
+        <li><a href="#">Rajasthan</a></li>
+        <li><a href="#">Kerala</a></li>
+        <li><a href="#">Ladakh</a></li>
+        <li><a href="#">Goa</a></li>
+        <li><a href="#">Varanasi</a></li>
+        <li><a href="#">Andaman</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-heading">International</div>
+      <ul class="footer-links">
+        <li><a href="#">Paris, France</a></li>
+        <li><a href="#">Santorini</a></li>
+        <li><a href="#">Bali</a></li>
+        <li><a href="#">Tokyo</a></li>
+        <li><a href="#">Dubai</a></li>
+        <li><a href="#">Machu Picchu</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-heading">Company</div>
+      <ul class="footer-links">
+        <li><a href="#">About Yatra</a></li>
+        <li><a href="#">Our Experts</a></li>
+        <li><a href="#">Careers</a></li>
+        <li><a href="#">Press</a></li>
+        <li><a href="#">Contact Us</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2024 Yatra Travel Co. All rights reserved.</span>
+    <div class="footer-socials">
+      <a href="#">𝕏</a>
+      <a href="#">f</a>
+      <a href="#">in</a>
+      <a href="#">📷</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Sticky nav
+  const nav = document.getElementById('nav');
+  window.addEventListener('scroll', () => {
+    nav.classList.toggle('scrolled', window.scrollY > 60);
+  });
+
+  // Scroll reveal
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry, i) => {
+      if (entry.isIntersecting) {
+        setTimeout(() => entry.target.classList.add('visible'), i * 80);
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1 });
+  reveals.forEach(el => observer.observe(el));
+
+  // Newsletter
+  document.querySelector('.newsletter-form button').addEventListener('click', () => {
+    const input = document.querySelector('.newsletter-form input');
+    if (input.value) {
+      input.value = '✓ You\'re subscribed!';
+      input.style.color = '#2d6b2a';
+    }
+  });
+</script>
+</body>
+</html>
